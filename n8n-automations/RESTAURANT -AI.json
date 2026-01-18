@@ -1,0 +1,578 @@
+{
+  "name": "RESTAURANT -AI",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "hallo ",
+        "formDescription": "restaurant  burger ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Enter your review ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Enter your phone ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Enter your Email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "number of order ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "name  of the food "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -864,
+        -368
+      ],
+      "id": "d1a7c424-88db-4a6c-892d-f8eb54d0a1aa",
+      "name": "On form submission",
+      "webhookId": "c6c7e82f-e5ec-4fe5-8ce4-88e57919f170"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=here is the information :\nreview:{{ $json['Enter your review '] }}\nEmail:{{ $json['Enter your Email'] }}\nnumber of order:{{ $json['number of order '] }}\nname of the food:{{ $json['name  of the food '] }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=أنت مدير مطعم يتصرف بأسلوب بشري حقيقي، ومسؤول عن تحليل رسائل وتقييمات العملاء، ثم كتابة وإرسال رسائل بريد إلكتروني احترافية بناءً على هذا التحليل.\n\nدورك لا يقتصر على الرد، بل يبدأ بفهم الرسالة وتحليلها بعمق قبل اتخاذ أي إجراء.\n\nيجب أن يكون الإيميل دائمًا منسقًا، واضحًا، ومكتوبًا وكأنه صادر عن مدير مطعم حقيقي مسؤول عن التواصل مع العملاء.\n\nقواعد أساسية لإخراج الإيميل:\n\n- يجب أن يبدأ الإيميل دائمًا بالجملة التالية (بدون تغيير معناها):\n  \"أهلاً بك في مطعم Restaurant Burger، لقد تلقّينا رسالتك...\"\n\n- سيتم تزويدك داخل رسالة المستخدم بتفاصيل الطلب (رقم الطلب، التاريخ، نوع الطلب، وأي معلومات أخرى).\n- يجب استخدام هذه المعلومات كما هي دون افتراض أو تعديل.\n\nخطوات التحليل التي يجب اتباعها قبل كتابة الإيميل:\n\n1. تحليل الرسالة:\n   - اقرأ رسالة العميل أو تقييمه بعناية.\n   - حدّد نوع الرسالة (شكوى، ملاحظة، اقتراح، مدح).\n   - استخرج النقاط الأساسية التي يتحدث عنها العميل دون أي افتراضات.\n\n2. تحليل المشاعر:\n   - حدّد الحالة الشعورية للعميل (غاضب، محبط، محايد، راضٍ).\n   - اضبط نبرة الإيميل بناءً على مشاعر العميل، وليس فقط محتوى الرسالة.\n\n3. تحديد سبب المشكلة:\n   - افهم السبب الرئيسي للرسالة (جودة الطعام، الخدمة، التأخير، السعر، خطأ في الطلب، إلخ).\n   - لا تبدأ بكتابة الإيميل قبل فهم السبب بوضوح.\n\n4. تقييم مستوى الغضب:\n   - قيّم مدى حدّة الرسالة.\n   - كلما زاد مستوى الغضب، زاد مستوى التعاطف والهدوء في الإيميل.\n\n5. نبرة إنسانية في الإيميل:\n   - اكتب الإيميل وكأنك إنسان حقيقي يتواصل مباشرة مع العميل.\n   - استخدم لغة محترمة، طبيعية، وواضحة.\n   - تجنّب الردود الجاهزة أو الصياغات الآلية.\n\n6. تحمّل المسؤولية بدون لوم:\n   - اعترف بتجربة العميل ومشاعره.\n   - لا تلُم العميل.\n   - لا تدخل في جدال أو تبرير.\n   - لا تختلق معلومات أو وعود غير مؤكدة.\n\n7. تنظيم وتنسيق الإيميل:\n   - قسّم الإيميل إلى:\n     مقدمة → توضيح وتحليل → ختام.\n   - استخدم جمل قصيرة وواضحة.\n   - احرص على أن يكون الإيميل سهل القراءة ومهنيًا.\n\n8. الهدف من الإيميل:\n   - تهدئة العميل.\n   - توضيح الاهتمام بتجربته.\n   - الحفاظ على سمعة المطعم وبناء الثقة.\n\n9. عدم الاختلاق أو الافتراض:\n   - لا تضف أي معلومات غير موجودة في رسالة العميل.\n   - لا تعد بخصومات أو تعويضات إلا إذا ذُكرت صراحة.\n   - اعتمد فقط على البيانات المقدّمة لك.\n\nشكل الإيميل النهائي:\n- بداية ثابتة ترحيبية باسم المطعم.\n- عرض مختصر لمعلومات الطلب.\n- فقرة توضّح فهمك وتحليلك لرسالة العميل.\n- ختام احترافي يحافظ على الثقة ويُظهر الاهتمام.\n\nالإيميل النهائي يجب أن يكون احترافيًا، إنسانيًا، ومنسقًا، وكأنه مكتوب بواسطة مدير مطعم حقيقي مسؤول عن التواصل مع العملاء عبر البريد الإلكتروني.\n\n🔹 Example 3: رسالة إيجابية (Positive Review)\n\nSubject:\nThank You for Your Feedback – Restaurant Burger\n\nEmail Body:\nأهلاً بك في مطعم Restaurant Burger، لقد تلقّينا رسالتك، ويسعدنا كثيرًا أن نعرف أن تجربتك كانت مرضية.\n\nنقدّر وقتك في مشاركة رأيك الإيجابي، ويسعدنا أن الأكل والخدمة نالا إعجابك.\n\nملاحظاتك تشجّع فريق العمل على الاستمرار في تقديم أفضل مستوى ممكن من الخدمة، ونتطلع إلى خدمتك مرة أخرى قريبًا.\n\nمع خالص التقدير،\nإدارة مطعم Restaurant Burger\n\n\n\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -656,
+        -368
+      ],
+      "id": "1c495cf7-4e5c-4d1b-a6eb-1bb5c894c340",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "x-ai/grok-4.1-fast",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -752,
+        -144
+      ],
+      "id": "acf45572-0f02-4e1a-8788-a386c47c4ee3",
+      "name": "BRAIN",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TuivEkbr74GzK0Cj",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1mGA42qbcMYo5cTXNbtAn_K49JxELrkji7EWqEEDTpko",
+          "mode": "list",
+          "cachedResultName": "restauranttt",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mGA42qbcMYo5cTXNbtAn_K49JxELrkji7EWqEEDTpko/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mGA42qbcMYo5cTXNbtAn_K49JxELrkji7EWqEEDTpko/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "review": "={{ $('On form submission').item.json['Enter your review '] }}",
+            "phone number": "={{ $('On form submission').item.json['Enter your phone '] }}",
+            "number of order": "={{ $('On form submission').item.json['number of order '] }}",
+            "Email": "={{ $('On form submission').item.json['Enter your Email'] }}",
+            "name of the food ": "={{ $('On form submission').item.json['name  of the food '] }}",
+            "analyze": "={{ $json.output.analysis.sentiment }}",
+            "message_type": "={{ $json.output.analysis.message_type }}",
+            "main_issue": "={{ $json.output.analysis.main_issue }}",
+            "level": "={{ $json.output.analysis.anger_level }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "review",
+              "displayName": "review",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone number",
+              "displayName": "phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "number of order",
+              "displayName": "number of order",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name of the food ",
+              "displayName": "name of the food ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message_type",
+              "displayName": "message_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "analyze",
+              "displayName": "analyze",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "main_issue",
+              "displayName": "main_issue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "level",
+              "displayName": "level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -256,
+        -448
+      ],
+      "id": "66fc3e9e-e5d8-4056-a4bf-830e178047b8",
+      "name": "APPEND",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sRl4OKYofipw28Le",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"analysis\": {\n    \"message_type\": \"complaint | praise | suggestion | mixed\",\n    \"sentiment\": \"angry | frustrated | neutral | satisfied\",\n    \"main_issue\": \"food quality | delay | service | pricing | order mistake | other\",\n    \"anger_level\": \"low | medium | high\"\n  },\n  \"email\": {\n    \"subject\": \"Regarding Your Order – Restaurant Burger\",\n    \"greeting\": \"أهلاً بك في مطعم Restaurant Burger\",\n    \"body\": \"لقد تلقّينا رسالتك بخصوص طلبك، وبعد مراجعة التفاصيل نود أن نوضح أننا نقدّر ملاحظتك ونتفهّم تجربتك.\",\n    \"closing\": \"مع خالص التقدير، إدارة مطعم Restaurant Burger\"\n  }\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        -144
+      ],
+      "id": "0f587dd8-9ef2-48a7-b2b7-7cfb7a62b679",
+      "name": "parser"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json['Enter your Email'] }}",
+        "subject": "={{ $json.output.email.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.output.email.greeting }}\n\n{{ $json.output.email.body }}\n\n{{ $json.output.email.closing }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -240,
+        -256
+      ],
+      "id": "95b151f6-83e5-4c3f-ab34-9a81a47d4ba8",
+      "name": "message",
+      "webhookId": "4437d559-e3de-4bb7-ac86-3e8fc7939a2f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "AzZJHv4uX1Awx7kb",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "hallo ",
+        "formDescription": "restaurant  burger ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Enter your review ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Enter your phone ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Enter your Email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "number of order ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "name  of the food "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -944,
+        32
+      ],
+      "id": "d56404d9-4255-4c9e-a1c3-a81c16d52636",
+      "name": "On form submission1",
+      "webhookId": "9326171a-1c4b-44ff-ad30-e6c579b0c4b7"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1mGA42qbcMYo5cTXNbtAn_K49JxELrkji7EWqEEDTpko",
+          "mode": "list",
+          "cachedResultName": "restauranttt",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mGA42qbcMYo5cTXNbtAn_K49JxELrkji7EWqEEDTpko/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 199083320,
+          "mode": "list",
+          "cachedResultName": "الورقة2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1mGA42qbcMYo5cTXNbtAn_K49JxELrkji7EWqEEDTpko/edit#gid=199083320"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "review": "={{ $('On form submission1').item.json['Enter your review '] }}",
+            "Email": "={{ $('On form submission1').item.json['Enter your Email'] }}",
+            "phone number": "={{ $('On form submission1').item.json['Enter your phone '] }}",
+            "name of the food ": "={{ $('On form submission1').item.json['name  of the food '] }}",
+            "number of order": "={{ $('On form submission1').item.json['number of order '] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "review",
+              "displayName": "review",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone number",
+              "displayName": "phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "number of order",
+              "displayName": "number of order",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name of the food ",
+              "displayName": "name of the food ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -592,
+        32
+      ],
+      "id": "fd82d458-dfed-410d-83b6-8cf1bb99d02c",
+      "name": "APEEND",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sRl4OKYofipw28Le",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst output = [];\n\nfor (const item of items) {\n  const email = item.json.Email || item.json.email || \"\";\n\n  let firstName = null;\n\n  if (email && email.includes(\"@\")) {\n    const beforeAt = email.split(\"@\")[0];\n\n    // ناخد أول جزء قبل أي رقم أو underscore\n    const match = beforeAt.match(/[a-zA-Z]+/);\n\n    if (match) {\n      firstName = match[0].toUpperCase();\n    }\n  }\n\n  output.push({\n    json: {\n      email: email,\n      first_name: firstName\n    }\n  });\n}\n\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        32
+      ],
+      "id": "6c3fd609-2b4b-41f2-92b8-0e27a879a93a",
+      "name": "coda"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst output = [];\n\nconst positiveWords = [\n  \"excellent\", \"amazing\", \"perfect\", \"love\", \"great\", \"delicious\", \"awesome\", \"good\", \"nice\"\n];\n\nconst negativeWords = [\n  \"very bad\", \"terrible\", \"awful\", \"worst\", \"hate\",\n  \"bad\", \"cold\", \"late\", \"poor\", \"disappointed\"\n];\n\nfor (const item of items) {\n  const reviewTextRaw = item.json[\"Enter your review\"] ?? \"\";\n  const reviewText = String(reviewTextRaw).toLowerCase();\n\n  let positiveScore = 0;\n  let negativeScore = 0;\n\n  // احسب السالب\n  for (const w of negativeWords) {\n    if (reviewText.includes(w)) negativeScore++;\n  }\n\n  // احسب الموجب\n  for (const w of positiveWords) {\n    if (reviewText.includes(w)) positiveScore++;\n  }\n\n  let sentiment = \"neutral\";\n  let responseMessage =\n    \"Thank you for sharing your feedback with us. We appreciate your time and will review your comments carefully.\";\n\n  // ✅ قرار التصنيف (أي سالب موجود = سلبي)\n  if (negativeScore > 0 && negativeScore >= positiveScore) {\n    sentiment = \"negative\";\n    responseMessage =\n      \"We sincerely apologize for your experience. Your feedback is important to us, and we will review this carefully to improve.\";\n  } else if (positiveScore > 0 && positiveScore > negativeScore) {\n    sentiment = \"positive\";\n    responseMessage =\n      \"Thank you so much for your kind feedback! We’re happy you enjoyed your experience and look forward to serving you again.\";\n  }\n\n  output.push({\n    json: {\n      review_text: reviewTextRaw,\n      review_sentiment: sentiment,\n      response_message: responseMessage,\n      debug: { positiveScore, negativeScore } // 👈 مفيد للتأكد\n    }\n  });\n}\n\nreturn output;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -768,
+        32
+      ],
+      "id": "d88ebdb0-e9e9-4ae6-a21a-eb7c880592c2",
+      "name": "c0da"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission1').item.json['Enter your Email'] }}",
+        "subject": "=RESTAURAN BURGER ORDER: {{ $('On form submission1').item.json['number of order '] }}",
+        "emailType": "text",
+        "message": "=HALLO {{ $json.first_name }}\n\norder id:{{ $('On form submission1').item.json['number of order '] }}\n\nname of food :{{ $('On form submission1').item.json['name  of the food '] }}\n\n{{ $('c0da').item.json.response_message }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -256,
+        32
+      ],
+      "id": "21710171-7828-4118-a4d6-7dec5c14e7bf",
+      "name": "MESSAGE",
+      "webhookId": "edf29374-c8ec-450e-b5e4-95cba1e2fd5a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "AzZJHv4uX1Awx7kb",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Enter your review ": "the food is very bad",
+          "Enter your phone ": "82832832",
+          "Enter your Email": "omarrhossam56@gmail.com",
+          "number of order ": "89",
+          "name  of the food ": "pizza chucken",
+          "submittedAt": "2026-01-17T12:47:04.419-05:00",
+          "formMode": "test"
+        }
+      }
+    ],
+    "On form submission1": [
+      {
+        "json": {
+          "Enter your review ": "the food is very bad",
+          "Enter your phone ": "82832832",
+          "Enter your Email": "omarrhossam56@gmail.com",
+          "number of order ": "89",
+          "name  of the food ": "pizza chucken",
+          "submittedAt": "2026-01-17T12:47:04.419-05:00",
+          "formMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BRAIN": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "APPEND",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission1": {
+      "main": [
+        [
+          {
+            "node": "c0da",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "APEEND": {
+      "main": [
+        [
+          {
+            "node": "coda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "coda": {
+      "main": [
+        [
+          {
+            "node": "MESSAGE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "c0da": {
+      "main": [
+        [
+          {
+            "node": "APEEND",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b912f071-e3bd-43c6-bab8-e533c51f57ee",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "439ddf262cb6d4bc23638345742ff808861f469240a29d64ad035d247d5a6d76"
+  },
+  "id": "NUQQvWDqU8XzAMxT",
+  "tags": []
+}
