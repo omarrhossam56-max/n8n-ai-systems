@@ -1,0 +1,1728 @@
+{
+  "name": "social media",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -2064,
+        96
+      ],
+      "id": "d78d482c-9f51-4061-ac50-856120dc6850",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1840,
+        400
+      ],
+      "id": "9bf0c98b-5278-45ff-a404-be58baabcaa2",
+      "name": "DOWNLOAD"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cefb3a3b-6da9-419c-ba11-4dcbf84a1d40",
+              "name": "video_url",
+              "value": "={{ JSON.parse($json.data.resultJson).resultUrls[0] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -832,
+        384
+      ],
+      "id": "b805254f-a47b-459b-9535-086b29ea637e",
+      "name": "video url"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4f9a9a29-cc45-4e39-a1a0-e78caadbab09",
+              "leftValue": "={{ $json.data.state }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1088,
+        400
+      ],
+      "id": "ecef4778-b4eb-471f-b0bc-ad322a7c68a0",
+      "name": "IF"
+    },
+    {
+      "parameters": {
+        "url": "https://api.kie.ai/api/v1/jobs/recordInfo",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "taskId",
+              "value": "={{ $json.data.taskId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1264,
+        400
+      ],
+      "id": "aff494ee-3ebb-4356-8331-48eb7314ef2a",
+      "name": "GET VIDEO",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "ajfF7NeBgeyOvkTc",
+          "name": "Header Auth account 11"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"openai/gpt-4o-mini\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are an Instagram SEO copywriter specialized in Reels descriptions. Follow formatting rules exactly.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Based on this keyword{{ $('PUBLIC ID').item.json.public_id }} , write an optimized Instagram Reels video description (maximum 250 characters). Make it SEO-friendly, clear, and engaging. Do not use emojis. Do not use hashtags.\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1216,
+        688
+      ],
+      "id": "d160264f-4723-4301-a216-fd588f6292ca",
+      "name": "Insta Title ",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "ajfF7NeBgeyOvkTc",
+          "name": "Header Auth account 11"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"openai/gpt-4o-mini\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are an Instagram SEO copywriter for recipe content. Follow formatting rules exactly.\"\n    },\n    {\n      \"role\": \"user\",\n       \"content\": \" based on this keyword {{ $('PUBLIC ID').item.json.public_id }}write a 250 character instagram reel caption, make sure it's seo optimized for the topic of the keyword, use 6 related hashtags and no emojis\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1040,
+        688
+      ],
+      "id": "5b5909db-982f-4f33-a9d9-b2f053f17021",
+      "name": "Insta Caption",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "ajfF7NeBgeyOvkTc",
+          "name": "Header Auth account 11"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1sldxZ_fCASFZigSOdF0HMwegd2YFVILbKINne-fC164",
+          "mode": "list",
+          "cachedResultName": "instgram reels",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sldxZ_fCASFZigSOdF0HMwegd2YFVILbKINne-fC164/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sldxZ_fCASFZigSOdF0HMwegd2YFVILbKINne-fC164/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "pending"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1856,
+        96
+      ],
+      "id": "04f44f4e-f5d0-471e-a941-c39a68b987df",
+      "name": "GET"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.keyword }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=## UNIVERSAL REALISTIC IMAGE & VIDEO PROMPT\n\nROLE:\n\nYou are an advanced AI image and video prompt generator specialized in ultra-realistic visual content.\n\nYour task is to transform the user's scene idea into:\n\n1. One detailed IMAGE PROMPT optimized for Nano Banana 2.\n2. One detailed VIDEO PROMPT designed to animate the generated image naturally.\n\nBoth must feel like real-world professional camera footage.\n\n---\n\n## SCENE\n\nFollow the user's idea exactly.\n\nThe subject can be anything:\npeople, animals, vehicles, ships, aircraft, spacecraft, planets, cities, architecture, nature, futuristic environments, fantasy environments, or completely fictional objects.\n\nDo not restrict the scene to realistic subjects.\n\nIf the subject is fictional or physically impossible, keep the subject exactly as described while making its materials, scale, lighting, perspective, atmosphere, and environmental interaction physically believable.\n\nDo not add unnecessary objects or remove important elements.\n\n---\n\n## IMAGE PROMPT\n\nCreate ONE ultra-realistic photograph of the described scene.\n\nChoose the most appropriate camera position, camera height, focal length, perspective, framing, and composition automatically based on the subject and environment.\n\nThe camera must feel physically present in the scene.\n\nUse natural photographic composition with realistic foreground, middle ground, and background.\n\nUse realistic:\n\n- lighting\n- shadows\n- reflections\n- materials\n- textures\n- scale\n- atmosphere\n- perspective\n- exposure\n- depth of field\n\nChoose realistic lens characteristics appropriate for the scene.\n\nUse natural depth of field and realistic focus behavior.\n\nKeep subtle real-world imperfections such as natural surface variation, minor environmental details, realistic lens behavior, and slight imperfections.\n\nAvoid:\n\n- CGI appearance\n- 3D render appearance\n- illustration\n- cartoon\n- anime\n- concept art\n- artificial symmetry\n- excessive sharpness\n- excessive HDR\n- unrealistic glow\n- oversaturated colors\n- dramatic cinematic color grading\n- plastic-looking materials\n- perfect surfaces\n- obvious AI artifacts\n\nDo not make the scene look overly polished or artificially perfect.\n\nThe final image must look like an authentic photograph captured by a professional real-world camera.\n\nAspect ratio: 9:16.\n\n---\n\n## VIDEO PROMPT\n\nCreate ONE short, continuous, ultra-realistic video based exactly on the generated image.\n\nDuration: EXACTLY 8 seconds.\n\nAspect ratio: 9:16.\n\nThe video must be ONE uninterrupted shot with no cuts, transitions, time jumps, or scene changes.\n\nPreserve the exact:\n\n- subject\n- environment\n- composition\n- camera perspective\n- lighting\n- colors\n- scale\n- visual identity\n\nUse natural and physically believable camera movement appropriate for the specific scene.\n\nPossible camera movements include:\n\n- subtle handheld movement\n- slow pan\n- gentle tracking\n- slow push-in\n- slow pull-back\n- slight camera movement\n- static observational camera\n\nChoose only the movement that naturally fits the scene.\n\nDo not force dramatic camera movement.\n\nAdd subtle realistic movement to the subject and environment:\n\n- natural subject movement\n- realistic environmental motion\n- physically believable physics\n- subtle focus changes\n- realistic motion blur\n- atmospheric movement\n- natural interaction between objects and environment\n\nStructure the 8-second shot naturally:\n\n0–2 seconds:\nEstablish the scene with subtle natural camera and environmental movement.\n\n2–6 seconds:\nThe main subject and environment continue moving naturally and realistically.\n\n6–8 seconds:\nContinue the same motion and end naturally without an artificial cinematic ending.\n\nAvoid:\n\n- fast cuts\n- sudden camera movements\n- teleportation\n- scene changes\n- exaggerated motion\n- unrealistic physics\n- excessive slow motion\n- artificial cinematic effects\n- dramatic transitions\n\nThe final video must feel like a real continuous 8-second camera recording.\n\n---\n\n## REALISM STANDARD\n\nThe image and video must look physically believable and naturally captured.\n\nLighting must behave realistically.\n\nShadows must match the light source.\n\nReflections must match the environment.\n\nMaterials must react naturally to light and weather.\n\nObjects must have believable scale, weight, movement, and environmental interaction.\n\nFor fictional or futuristic scenes, the subject may be imaginary, but the photographic treatment must remain realistic.\n\nThe final result should feel like a real moment captured by a physical camera, not an AI-generated image or video.\n\n---\n\n## FINAL OUTPUT FORMAT\n\nIMAGE PROMPT:\n[Write one complete image-generation prompt ready to use in Nano Banana 2.]\n\nVIDEO PROMPT:\n[Write one complete video-generation prompt ready to use with an image-to-video model.]\n\nReturn ONLY these two prompts.\n\nDo not explain the process.\n\nDo not provide multiple versions.\n\nDo not add labels other than \"IMAGE PROMPT\" and \"VIDEO PROMPT\"."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1632,
+        96
+      ],
+      "id": "57a8cc6a-6874-4d7d-b02a-0bee1c341228",
+      "name": "AI"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/jobs/createTask",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": []
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"google/nano-banana\",\n  \"input\": {\n    \"prompt\": \"{{ $json.output['image description'].replace(/\\n/g, ' ').replace(/\\\"/g, '\\\\\\\"') }}\",\n    \"output_format\": \"png\",\n    \"image_size\": \"1:1\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1296,
+        96
+      ],
+      "id": "b7cf4433-1c89-47ee-b1dd-42eb78885618",
+      "name": "CREATE",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "ajfF7NeBgeyOvkTc",
+          "name": "Header Auth account 11"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1088,
+        96
+      ],
+      "id": "56a96e8b-a3c5-4955-a465-7699d82482a1",
+      "name": "WAIT",
+      "webhookId": "b5cb0cb8-4723-4fb1-ac4b-8eaee9b893a6"
+    },
+    {
+      "parameters": {
+        "url": "https://api.kie.ai/api/v1/jobs/recordInfo",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "taskId",
+              "value": "={{ $('CREATE').item.json.data.taskId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -928,
+        96
+      ],
+      "id": "8db4f8f9-dd75-4414-9768-0f2b92d08dd1",
+      "name": "GET IMAGE",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "71piuZ6KalDzMmr7",
+          "name": "sora 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "30bbdbcb-d3d6-4846-b72c-cd7563d0a974",
+              "leftValue": "={{ $json.data.state }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -736,
+        96
+      ],
+      "id": "367d665a-d64b-4a9d-a1a0-6179d106b14b",
+      "name": "IF1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "81a9ba8c-0d6c-4a0a-b32c-996d1070369a",
+              "name": "url",
+              "value": "={{ JSON.parse($json.data.resultJson).resultUrls[0] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2048,
+        400
+      ],
+      "id": "fd139b9f-86b6-4d28-bc10-ee5d5f7ed7f8",
+      "name": "SET"
+    },
+    {
+      "parameters": {
+        "name": "=man",
+        "driveId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1840,
+        688
+      ],
+      "id": "75d0a32b-e8f2-4407-adf6-f3599d574683",
+      "name": "UPLOAD FILE",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "D2Jk2ga23eMkQuVE",
+          "name": "Google Drive account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// هنقرا الاسم من الـ json بدل الـ binary\nconst fileName = items[0].json.name;\n\n// الكود بتاعك زي ما هو عشان يشيل الامتداد والمسافات\nconst cleanedName = fileName.replace(/\\.[^/.]+$/, \"\").trim().replace(/\\s+/g, \"_\");\n\nreturn [{ json: { public_id: cleanedName } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1648,
+        688
+      ],
+      "id": "d422db77-7bfd-4ed4-bd2d-d5ab6a29b390",
+      "name": "PUBLIC ID"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.video_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -2048,
+        688
+      ],
+      "id": "184abd50-889a-458d-8349-d23c4011fbd0",
+      "name": "DOWNL0AD"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1sldxZ_fCASFZigSOdF0HMwegd2YFVILbKINne-fC164",
+          "mode": "list",
+          "cachedResultName": "instgram reels",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sldxZ_fCASFZigSOdF0HMwegd2YFVILbKINne-fC164/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sldxZ_fCASFZigSOdF0HMwegd2YFVILbKINne-fC164/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "pending"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1408,
+        688
+      ],
+      "id": "24238f5b-e005-418b-8e5d-d9db3f2c2d69",
+      "name": "GET ROW"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1sldxZ_fCASFZigSOdF0HMwegd2YFVILbKINne-fC164",
+          "mode": "list",
+          "cachedResultName": "instgram reels",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sldxZ_fCASFZigSOdF0HMwegd2YFVILbKINne-fC164/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sldxZ_fCASFZigSOdF0HMwegd2YFVILbKINne-fC164/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('GET ROW').item.json.row_number }}",
+            "keyword": "={{ $('GET ROW').item.json.keyword }}",
+            "new image": "={{ $('DOWNLOAD').item.json.url }}",
+            "video url": "={{ $('video url').item.json.video_url }}",
+            "Caption": "={{ $('Insta Title ').item.json.choices[0].message.content }}",
+            "hastag": "={{ $json.choices[0].message.content }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "keyword",
+              "displayName": "keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "new image",
+              "displayName": "new image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "video url",
+              "displayName": "video url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "hastag",
+              "displayName": "hastag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Caption",
+              "displayName": "Caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -832,
+        688
+      ],
+      "id": "f2453348-5b6a-48be-83e1-7b5a51fd4a71",
+      "name": "UPDATE"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('UPLOAD FILE').item.json.webContentLink }}",
+        "resource_type": "video",
+        "additionalFields": {
+          "public_id": "={{ $('PUBLIC ID').item.json.public_id }}",
+          "folder": "Home"
+        }
+      },
+      "type": "n8n-nodes-cloudinary.cloudinary",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        656
+      ],
+      "id": "47468d47-25ba-49de-8fd1-2e401b776ed2",
+      "name": "CLOYDINARY",
+      "credentials": {
+        "cloudinaryApi": {
+          "id": "Wv9oeY9YKuL59GSX",
+          "name": "Cloudinary account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        288
+      ],
+      "id": "bf3b5686-2682-4a8b-b8e1-162a6a809543",
+      "name": "BRAIN",
+      "credentials": {
+        "openRouterApi": {
+          "id": "AgWwXcRLgb7utRJz",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 20
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        896
+      ],
+      "id": "5c0aa0cb-1e78-47db-8bbf-dfd8ce274b3a",
+      "name": "WAITT",
+      "webhookId": "2dbbd221-1a9f-46b4-b095-6db803627df3"
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('UPLOAD FILE').item.json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1fuX_eRFoRoJSxW-DQ0D4XkP2Bsp1FrKo",
+          "mode": "list",
+          "cachedResultName": "file",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1fuX_eRFoRoJSxW-DQ0D4XkP2Bsp1FrKo"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        528,
+        896
+      ],
+      "id": "0ce10b8c-2577-413c-abec-2b0937597c0c",
+      "name": "Move file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "D2Jk2ga23eMkQuVE",
+          "name": "Google Drive account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v25.0",
+        "edge": "media_publish",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "creation_id",
+                "value": "={{ $json.id }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        336,
+        896
+      ],
+      "id": "cec3e221-ecc9-4eca-bc4b-533e7d738035",
+      "name": "UPLOAD TO INSTGRAM",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "kgEJQ38LJ7KYHnxr",
+          "name": "Facebook Graph account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        720,
+        896
+      ],
+      "id": "d45930ff-1424-431a-a199-cf19aad8cc8c",
+      "name": "UPDATEE",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XEbJFaG6cLszmrnh",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "A sophisticated automation system that creates professional product ads using AI, then publishes them automatically across social media platforms, with full tracking and monitoring to ensure optimal results without any manual intervention.\n\nHow It Works:\n\n1️⃣ Phase One – Creation:\n\nGenerate professional ad images using AI.\n\nAutomatically convert images into engaging videos.\n\nAdd suitable titles and descriptions for each platform automatically.\n\n2️⃣ Phase Two – Storage:\n\nSave and organize files on Google Drive.\n\nManage data efficiently in Google Sheets.\n\nUpload files to cloud storage services like Cloudinary.\n\n3️⃣ Phase Three – Publishing:\n\nAutomatically publish content on YouTube.\n\nPublish on Facebook with full post status tracking.\n\nPublish on Instagram with instant notifications for every action.",
+        "height": 736,
+        "width": 336,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1152,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "a80abd9f-c215-4cb0-bf56-192adfef082b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "edge": "video_reels",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "upload_phase",
+                "value": "start"
+              },
+              {
+                "name": "url",
+                "value": "={{ $json.secure_url }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        48,
+        16
+      ],
+      "id": "2227e2d9-7fa2-48b0-a46f-ba7bf929ab84",
+      "name": "Initialize an Upload Session",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "kgEJQ38LJ7KYHnxr",
+          "name": "Facebook Graph account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.upload_url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "file_url",
+              "value": "={{ $('CLOYDINARY').item.json.secure_url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        16
+      ],
+      "id": "10a263b6-4a8e-4884-ba0d-6e5af67ee04a",
+      "name": "Upload a Hosted File",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "kgEJQ38LJ7KYHnxr",
+          "name": "Facebook Graph account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "hostUrl": "graph-video.facebook.com",
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "edge": "video_reels",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "upload_phase",
+                "value": "finish"
+              },
+              {
+                "name": "video_state",
+                "value": "PUBLISHED"
+              },
+              {
+                "name": "description",
+                "value": "={{ $('Insta Title ').item.json.choices[0].message.content }}\n\n\n{{ $('Insta Caption').item.json.choices[0].message.content }}"
+              },
+              {
+                "name": "video_id",
+                "value": "={{ $('Initialize an Upload Session').item.json.video_id }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        368,
+        16
+      ],
+      "id": "0e889ebe-ce0f-48c6-8d0d-3df63f45bda0",
+      "name": "Publish The Reel ",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "kgEJQ38LJ7KYHnxr",
+          "name": "Facebook Graph account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v24.0/{{ $('Initialize an Upload Session').item.json.video_id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "status    "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        560,
+        16
+      ],
+      "id": "1e654291-dcae-46b1-9118-d983458174a9",
+      "name": "Get the Upload Status",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "kgEJQ38LJ7KYHnxr",
+          "name": "Facebook Graph account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"image description\": \"\",\n\t\"video description \": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -512,
+        288
+      ],
+      "id": "e4d97290-8997-4c13-bd90-c18f24f5629e",
+      "name": "parser"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1440,
+        400
+      ],
+      "id": "b20dc3aa-ca49-4f00-bc81-46d14e201381",
+      "name": "WAIIT",
+      "webhookId": "9778c438-66f3-41db-9ddd-a645443efcea"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 176,
+        "width": 736
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "fcba7bb6-223b-4055-9ce2-57d30e8f7ea8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 176,
+        "width": 992
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        864
+      ],
+      "typeVersion": 1,
+      "id": "da38a826-c854-4271-8fcf-cc3bb85990ff",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/jobs/createTask",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"bytedance/v1-pro-fast-image-to-video\",\n  \"input\": {\n    \"prompt\": \"حط هنا المتغير بتاع البرومبت بتاعك\",\n    \"image_url\": \"{{ $('UPDATE1').item.json['new image'] }}\",\n    \"resolution\": \"720p\",\n    \"duration\": \"5\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -1648,
+        400
+      ],
+      "id": "33bebf9b-63b1-41b0-a122-a3e45b38d434",
+      "name": "Create Video",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "ajfF7NeBgeyOvkTc",
+          "name": "Header Auth account 11"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v25.0",
+        "edge": "media",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "media_type",
+                "value": "=REELS"
+              },
+              {
+                "name": "video_url",
+                "value": "={{ $json.secure_url }}"
+              },
+              {
+                "name": "caption",
+                "value": "=\n{{ $('UPDATE').item.json.Caption }}\n\n👉 Follow @omar61357 for more recipes!\n\nDid you like this recipe ? 🥑\n\n#travel #afcon #morocco #explor #food\n"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        896
+      ],
+      "id": "9356b5be-2940-4e38-b4e1-9d8e60201682",
+      "name": "facebook",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "kgEJQ38LJ7KYHnxr",
+          "name": "Facebook Graph account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "=hallo world",
+        "regionCode": "EG",
+        "binaryProperty": "=data",
+        "options": {
+          "privacyStatus": "public",
+          "selfDeclaredMadeForKids": false
+        }
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        336,
+        432
+      ],
+      "id": "f696b131-9282-478f-9a35-5b6ffc18a67a",
+      "name": "Upload a video",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "D6vts7qntwBASBaM",
+          "name": "YouTube account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.secure_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        144,
+        432
+      ],
+      "id": "1d04afee-7be6-4940-8121-922995d79e2d",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 176,
+        "width": 1552
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2128,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "8618078d-1e16-45bc-a62b-d4668262f628",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 176,
+        "width": 1552,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2128,
+        368
+      ],
+      "typeVersion": 1,
+      "id": "935bcad6-981a-4538-bb40-b5727eb6d38a",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 176,
+        "width": 1472
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2144,
+        672
+      ],
+      "typeVersion": 1,
+      "id": "09d7ed84-052a-453c-b48b-6c6b179b761b",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 176,
+        "width": 150,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -464,
+        624
+      ],
+      "typeVersion": 1,
+      "id": "6bfcf011-fd42-4da9-ab45-57f70552017d",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 176,
+        "width": 400,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        112,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "5ba43a2d-5c9d-4ff7-aab2-e5b66f4d070d",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 288,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "c579621b-4b96-4b5c-9d5c-f598f11fd4a7",
+      "name": "Sticky Note10"
+    }
+  ],
+  "pinData": {
+    "AI": [
+      {
+        "json": {
+          "output": {
+            "image description": "IMAGE PROMPT:\nUltra‑realistic vertical (9:16) photograph of a massive modern cruise ship plowing through a stormy, dark-blue ocean beneath enormous snow‑covered mountains. Camera positioned at low sea level, slightly off the ship's starboard bow, 2–4 meters above the waterline to emphasize scale — wide portrait framing that captures the tall ship in the middle ground and towering mountains filling the upper frame. Full‑frame camera, 28mm lens (slightly wide to include both ship and vertical scale of peaks), aperture f/4 for moderate depth of field, shutter 1/200s to keep wave motion slightly crisp with natural spray blur, ISO 400. Time: late afternoon under heavy storm clouds with cold, diffused light; small break in clouds providing a faint, cool rim highlight on the ship's wet railings and funnel. Lighting: overcast, directional diffuse from upper left, realistic soft shadows on hull and waves, specular wet reflections on metal and varnished wood. Atmosphere: low cloud and sea mist around the base of the mountains, salt spray and wind‑blown mist in the foreground, light snow flurries on mountain slopes (no heavy falling snow at sea), atmospheric depth with mountains softened by moisture. Ship details: wet dark‑blue/gray hull with subtle chipped paint, salt streaks, visible wet lifeboats along the side, deck railings glistening with water, warm navigation/cabin lights faintly visible through portholes to contrast cold scene, bow cutting through waves producing white foam and high spray, wake trailing behind. Foreground: out-of-focus wave crest and sea spray droplets on lens edge to sell proximity and realism. Background: enormous jagged snowy peaks, glaciers and sharp ridgelines with patches of exposed rock, low cloud hugging summits. Textures: realistic water foam, wet metal, rough mountain snow, slight salt residue on surfaces. Color palette: desaturated cold blues and grays, punctuated by warm amber cabin/nav lights and faint orange funnel glow. Natural imperfections: small lens water droplets, tiny motion blur on spray, slight chromatic aberration, realistic film grain (subtle), no CGI or painterly look. Composition: strong vertical emphasis, ship occupying lower two thirds vertically with mountains rising above, leading lines from ship's bow and wake draw eye upward toward peaks. Output for Nano Banana 2: photorealistic, ultra‑detailed, realistic materials, natural atmosphere, 9:16 aspect ratio.\n\nVIDEO PROMPT:\nVIDEO PROMPT (exactly 8 seconds, single uninterrupted shot, 9:16 vertical): Start with the same exact scene, composition, lighting and camera position as the image prompt — low sea level, slightly off the ship's starboard bow, 28mm equivalent lens, aperture f/4, 24 fps, shutter ~1/48 (180° shutter) to produce natural motion blur. Movement: gentle, realistic tracking forward and slight push‑in (camera moves forward at a slow, steady pace ~0.5–1.0 m/s) alongside the ship following its starboard hull; stabilized on a small boat or gimbal so movement is smooth with a subtle handheld roll and pitch from waves (±1–2°), slight vertical bobbing and very small lateral sway to sell ocean conditions. Maintain identical framing and scale to the still — ship remains the main subject in the middle ground, mountains filling the upper frame. Environmental motion: realistic ocean motion with waves lifting and breaking against the bow, water spray intermittently crossing the lens and leaving temporary droplets (slow streak and bead movement), wind whipping small flags and funnel steam, light snow flurries and low cloud movement on mountain faces, atmospheric mist drifting across lower peaks. Subject motion: the cruise ship slowly cuts forward through the sea, bow plunges into waves producing spray and foam; subtle hull roll and wake evolution visible. Focus behavior: start with the ship midship in crisp focus and slight depth separation (foreground wave crests slightly soft); during 2–6s perform a very subtle focus pull (micro pull) from the bow toward the midship and then to the distant mountains to emphasize scale, keeping changes minimal and natural. Structure: 0–2s — establish shot with slow forward track and gentle camera bob, visible spray and first contact of bow with a large wave; 2–6s — continue steady track with slightly increased forward momentum and the ship cutting through a larger swell, spray intensifies and occasional droplets hit lens, mountains show slow cloud/snow movement; 6–8s — maintain the same motion and rhythm, camera stabilizes slightly as ship and waves continue, end on natural continuation of forward tracking (no cuts or artificial stop). Motion blur: realistic motion blur on fast droplets and wave spray, crisp midground subject details, soft atmospheric haze on far mountains. Audio (optional for realism in model reference): distant wind, pounding waves, low mechanical hum of engines and muffled horn (but keep primary focus on visual). Preserve color, exposure and weather exactly as the still: cool, desaturated tones with warm cabin lights. Output: continuous, ultra‑realistic 8‑second vertical video suitable for an image‑to‑video model, faithfully animating the photographic scene described above.",
+            "video description ": "VIDEO PROMPT (duplicate for strict schema compatibility): Start with the same exact scene, composition, lighting and camera position as the image prompt — low sea level, slightly off the ship's starboard bow, 28mm equivalent lens, aperture f/4, 24 fps, shutter ~1/48 (180° shutter) to produce natural motion blur. Movement: gentle, realistic tracking forward and slight push‑in (camera moves forward at a slow, steady pace ~0.5–1.0 m/s) alongside the ship following its starboard hull; stabilized on a small boat or gimbal so movement is smooth with a subtle handheld roll and pitch from waves (±1–2°), slight vertical bobbing and very small lateral sway to sell ocean conditions. Maintain identical framing and scale to the still — ship remains the main subject in the middle ground, mountains filling the upper frame. Environmental motion: realistic ocean motion with waves lifting and breaking against the bow, water spray intermittently crossing the lens and leaving temporary droplets (slow streak and bead movement), wind whipping small flags and funnel steam, light snow flurries and low cloud movement on mountain faces, atmospheric mist drifting across lower peaks. Subject motion: the cruise ship slowly cuts forward through the sea, bow plunges into waves producing spray and foam; subtle hull roll and wake evolution visible. Focus behavior: start with the ship midship in crisp focus and slight depth separation (foreground wave crests slightly soft); during 2–6s perform a very subtle focus pull (micro pull) from the bow toward the midship and then to the distant mountains to emphasize scale, keeping changes minimal and natural. Structure: 0–2s — establish shot with slow forward track and gentle camera bob, visible spray and first contact of bow with a large wave; 2–6s — continue steady track with slightly increased forward momentum and the ship cutting through a larger swell, spray intensifies and occasional droplets hit lens, mountains show slow cloud/snow movement; 6–8s — maintain the same motion and rhythm, camera stabilizes slightly as ship and waves continue, end on natural continuation of forward tracking (no cuts or artificial stop). Motion blur: realistic motion blur on fast droplets and wave spray, crisp midground subject details, soft atmospheric haze on far mountains. Audio (optional for realism in model reference): distant wind, pounding waves, low mechanical hum of engines and muffled horn (but keep primary focus on visual). Preserve color, exposure and weather exactly as the still: cool, desaturated tones with warm cabin lights. Output: continuous, ultra‑realistic 8‑second vertical video suitable for an image‑to‑video model, faithfully animating the photographic scene described above."
+          }
+        }
+      }
+    ],
+    "CREATE": [
+      {
+        "json": {
+          "code": 200,
+          "msg": "success",
+          "data": {
+            "taskId": "cd66c7cc35b6375ad0c989f6ba8e4904",
+            "recordId": "cd66c7cc35b6375ad0c989f6ba8e4904"
+          }
+        }
+      }
+    ],
+    "UPLOAD FILE": [
+      {
+        "json": {
+          "kind": "drive#file",
+          "id": "1aDn2hkAkd6JsP6z6J9S9RzNQhpWOocdX",
+          "name": "man",
+          "mimeType": "video/mp4",
+          "starred": false,
+          "trashed": false,
+          "explicitlyTrashed": false,
+          "parents": [
+            "1VM-euoaVVRRPwAjQtxEF9alnzCMws4s-"
+          ],
+          "spaces": [
+            "drive"
+          ],
+          "version": "5",
+          "webContentLink": "https://drive.google.com/uc?id=1aDn2hkAkd6JsP6z6J9S9RzNQhpWOocdX&export=download",
+          "webViewLink": "https://drive.google.com/file/d/1aDn2hkAkd6JsP6z6J9S9RzNQhpWOocdX/view?usp=drivesdk",
+          "iconLink": "https://drive-thirdparty.googleusercontent.com/16/type/video/mp4",
+          "hasThumbnail": false,
+          "thumbnailVersion": "0",
+          "viewedByMe": false,
+          "createdTime": "2026-08-10T16:08:15.991Z",
+          "modifiedTime": "2026-08-10T16:08:16.953Z",
+          "modifiedByMeTime": "2026-08-10T16:08:16.953Z",
+          "modifiedByMe": true,
+          "owners": [
+            {
+              "kind": "drive#user",
+              "displayName": "omar hossam",
+              "photoLink": "https://lh3.googleusercontent.com/a/ACg8ocIwT49poWk4kV676bR8TGcZyoCcNmehCpC8PuSTiMIdVMP3nw=s64",
+              "me": true,
+              "permissionId": "15470405042214369163",
+              "emailAddress": "omar7ossam1212@gmail.com"
+            }
+          ],
+          "lastModifyingUser": {
+            "kind": "drive#user",
+            "displayName": "omar hossam",
+            "photoLink": "https://lh3.googleusercontent.com/a/ACg8ocIwT49poWk4kV676bR8TGcZyoCcNmehCpC8PuSTiMIdVMP3nw=s64",
+            "me": true,
+            "permissionId": "15470405042214369163",
+            "emailAddress": "omar7ossam1212@gmail.com"
+          },
+          "shared": true,
+          "ownedByMe": true,
+          "downloadRestrictions": {
+            "itemDownloadRestriction": {
+              "restrictedForReaders": false,
+              "restrictedForWriters": false
+            },
+            "effectiveDownloadRestrictionWithContext": {
+              "restrictedForReaders": false,
+              "restrictedForWriters": false
+            }
+          },
+          "capabilities": {
+            "canAcceptOwnership": false,
+            "canAccessViaGenAi": true,
+            "canAddChildren": false,
+            "canAddMyDriveParent": false,
+            "canChangeCopyRequiresWriterPermission": true,
+            "canChangeItemDownloadRestriction": true,
+            "canChangeSecurityUpdateEnabled": false,
+            "canChangeViewersCanCopyContent": true,
+            "canComment": true,
+            "canCopy": true,
+            "canDelete": true,
+            "canDisableInheritedPermissions": false,
+            "canDownload": true,
+            "canEdit": true,
+            "canEnableInheritedPermissions": true,
+            "canListChildren": false,
+            "canModifyContent": true,
+            "canModifyContentRestriction": true,
+            "canModifyEditorContentRestriction": true,
+            "canModifyOwnerContentRestriction": true,
+            "canModifyLabels": false,
+            "canMoveChildrenWithinDrive": false,
+            "canMoveItemIntoTeamDrive": true,
+            "canMoveItemOutOfDrive": true,
+            "canMoveItemWithinDrive": true,
+            "canReadLabels": false,
+            "canReadRevisions": true,
+            "canRemoveChildren": false,
+            "canRemoveContentRestriction": false,
+            "canRemoveMyDriveParent": true,
+            "canRename": true,
+            "canShare": true,
+            "canTrash": true,
+            "canUntrash": true,
+            "canStartApproval": false
+          },
+          "viewersCanCopyContent": true,
+          "copyRequiresWriterPermission": false,
+          "writersCanShare": true,
+          "permissions": [
+            {
+              "kind": "drive#permission",
+              "id": "anyoneWithLink",
+              "type": "anyone",
+              "role": "writer",
+              "allowFileDiscovery": false
+            },
+            {
+              "kind": "drive#permission",
+              "id": "15470405042214369163",
+              "type": "user",
+              "emailAddress": "omar7ossam1212@gmail.com",
+              "role": "owner",
+              "displayName": "omar7ossam1212",
+              "deleted": false,
+              "pendingOwner": false
+            }
+          ],
+          "permissionIds": [
+            "anyoneWithLink",
+            "15470405042214369163"
+          ],
+          "originalFilename": "man",
+          "fullFileExtension": "",
+          "fileExtension": "",
+          "md5Checksum": "feffd13a7470df3057474f4fbd408e96",
+          "sha1Checksum": "c5c44d6e03a5c8286af6fbb4110041daaf2a85c1",
+          "sha256Checksum": "ef3830ef238a0ad48552d3aa716b91285f3167c0922e2648cf586f15221567d4",
+          "size": "6559395",
+          "quotaBytesUsed": "6559395",
+          "headRevisionId": "0B91iC3WVe1zjRTJrdStGNlhaTlZzRXR2TW5JUkF2WmE2b2pZPQ",
+          "isAppAuthorized": true,
+          "clientEncryptionDetails": {
+            "decryptionMetadata": {
+              "wrappedKey": "",
+              "kaclsId": "0",
+              "aes256GcmChunkSize": "unset",
+              "keyFormat": "unsetKeyFormat",
+              "encryptionResourceKeyHash": ""
+            }
+          },
+          "linkShareMetadata": {
+            "securityUpdateEligible": false,
+            "securityUpdateEnabled": true
+          },
+          "inheritedPermissionsDisabled": false
+        }
+      }
+    ],
+    "Create Video": [
+      {
+        "json": {
+          "code": 200,
+          "msg": "success",
+          "data": {
+            "taskId": "df0ea3fe7c5a1d9537880e3d85612b2f",
+            "recordId": "df0ea3fe7c5a1d9537880e3d85612b2f"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "GET",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DOWNLOAD": {
+      "main": [
+        [
+          {
+            "node": "Create Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "video url": {
+      "main": [
+        [
+          {
+            "node": "DOWNL0AD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "video url",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WAIIT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET VIDEO": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insta Title ": {
+      "main": [
+        [
+          {
+            "node": "Insta Caption",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insta Caption": {
+      "main": [
+        [
+          {
+            "node": "UPDATE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET": {
+      "main": [
+        [
+          {
+            "node": "AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI": {
+      "main": [
+        [
+          {
+            "node": "CREATE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CREATE": {
+      "main": [
+        [
+          {
+            "node": "WAIT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WAIT": {
+      "main": [
+        [
+          {
+            "node": "GET IMAGE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET IMAGE": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "SET",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WAIT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SET": {
+      "main": [
+        [
+          {
+            "node": "DOWNLOAD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UPLOAD FILE": {
+      "main": [
+        [
+          {
+            "node": "PUBLIC ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PUBLIC ID": {
+      "main": [
+        [
+          {
+            "node": "GET ROW",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DOWNL0AD": {
+      "main": [
+        [
+          {
+            "node": "UPLOAD FILE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET ROW": {
+      "main": [
+        [
+          {
+            "node": "Insta Title ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UPDATE": {
+      "main": [
+        [
+          {
+            "node": "CLOYDINARY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CLOYDINARY": {
+      "main": [
+        [
+          {
+            "node": "facebook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Initialize an Upload Session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BRAIN": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WAITT": {
+      "main": [
+        [
+          {
+            "node": "UPLOAD TO INSTGRAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file": {
+      "main": [
+        [
+          {
+            "node": "UPDATEE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UPLOAD TO INSTGRAM": {
+      "main": [
+        [
+          {
+            "node": "Move file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize an Upload Session": {
+      "main": [
+        [
+          {
+            "node": "Upload a Hosted File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload a Hosted File": {
+      "main": [
+        [
+          {
+            "node": "Publish The Reel ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish The Reel ": {
+      "main": [
+        [
+          {
+            "node": "Get the Upload Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WAIIT": {
+      "main": [
+        [
+          {
+            "node": "GET VIDEO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Video": {
+      "main": [
+        [
+          {
+            "node": "WAIIT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "facebook": {
+      "main": [
+        [
+          {
+            "node": "WAITT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Upload a video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "14f00fe0-95ad-4f0d-bb7f-57fc3b3705ed",
+  "meta": {
+    "instanceId": "439ddf262cb6d4bc23638345742ff808861f469240a29d64ad035d247d5a6d76"
+  },
+  "nodeGroups": [],
+  "id": "KlcxfMHgB8tPi8nW",
+  "tags": []
+}
